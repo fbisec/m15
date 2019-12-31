@@ -1,0 +1,27 @@
+#!/bin/bash
+
+if [ -d "/tmp/SYNNEX_MANDARIN15_MAINBOARD_0.33/DMI" ]
+then
+cd /tmp/SYNNEX_MANDARIN15_MAINBOARD_0.33/DMI
+
+ppn=$(ipmitool fru print 0 | grep 'Product Part Number' | cut -d':' -f2)
+echo Part number: $ppn
+
+bpn=$(ipmitool fru print 0 | grep 'Board Part Number' | cut -d':' -f2)
+echo Board Part Number: $bpn
+
+bfmg=$(ipmitool fru print 0 | grep 'Board Mfg             :' | cut -d':' -f2)
+echo Board Mfg: $bfmg
+
+bserial=$(ipmitool fru print 0 | grep 'Board Serial' | cut -d':' -f2)
+echo Board Serial: $bserial
+eval ./amidelnx_64 /BP $ppn && ./amidelnx_64 /BV $bpn && ./amidelnx_64 /BM $bfmg && ./amidelnx_64 /BS $bserial
+
+echo
+echo "You're good to REBOOT and verify your host's health."
+
+else
+
+echo The directory /tmp/SYNNEX_MANDARIN15_MAINBOARD_0.33/DMI does not exist. Did you download the MANDARIN15 firmware & extract it in the temp directory ?
+
+fi
